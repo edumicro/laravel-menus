@@ -160,7 +160,7 @@ class Menu implements Countable
      *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->menus);
     }
@@ -168,7 +168,7 @@ class Menu implements Countable
     /**
      * Empty the current menus.
      */
-    public function destroy()
+    public function destroy(): bool
     {
         $this->menus = array();
     }
