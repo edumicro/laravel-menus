@@ -123,7 +123,7 @@ class MenuBuilder implements Countable
      * @param  string $value
      * @return \Nwidart\Menus\MenuItem
      */
-    public function findBy($key, $value)
+    public function findBy($key, $value): MenuItem
     {
         return collect($this->items)->filter(function ($item) use ($key, $value) {
             return $item->{$key} == $value;
@@ -137,7 +137,7 @@ class MenuBuilder implements Countable
      *
      * @return $this
      */
-    public function setViewFactory(ViewFactory $views)
+    public function setViewFactory(ViewFactory $views): MenuBuilder
     {
         $this->views = $views;
 
@@ -151,7 +151,7 @@ class MenuBuilder implements Countable
      *
      * @return $this
      */
-    public function setView($view)
+    public function setView($view): MenuBuilder
     {
         $this->view = $view;
 
@@ -165,21 +165,11 @@ class MenuBuilder implements Countable
      *
      * @return $this
      */
-    public function setPrefixUrl($prefixUrl)
+    public function setPrefixUrl($prefixUrl): MenuBuilder
     {
         $this->prefixUrl = $prefixUrl;
 
         return $this;
-    }
-
-    /**
-     * Set styles.
-     *
-     * @param array $styles
-     */
-    public function setStyles(array $styles)
-    {
-        $this->styles = $styles;
     }
 
     /**
@@ -197,7 +187,7 @@ class MenuBuilder implements Countable
      *
      * @return \Nwidart\Menus\Presenters\PresenterInterface
      */
-    public function getPresenter()
+    public function getPresenter(): Presenters\PresenterInterface
     {
         return new $this->presenter();
     }
@@ -209,7 +199,7 @@ class MenuBuilder implements Countable
      *
      * @return self
      */
-    public function style($name)
+    public function style($name): MenuBuilder
     {
         if ($this->hasStyle($name)) {
             $this->setPresenter($this->getStyle($name));
@@ -225,7 +215,7 @@ class MenuBuilder implements Countable
      *
      * @return bool
      */
-    public function hasStyle($name)
+    public function hasStyle($name): bool
     {
         return array_key_exists($name, $this->getStyles());
     }
@@ -270,7 +260,7 @@ class MenuBuilder implements Countable
      * @param array $bindings
      * @return $this
      */
-    public function setBindings(array $bindings)
+    public function setBindings(array $bindings): MenuBuilder
     {
         $this->bindings = $bindings;
 
@@ -343,9 +333,9 @@ class MenuBuilder implements Countable
      * @param callable $callback
      * @param array    $attributes
      *
-     * @return $this
+     * @return MenuItem
      */
-    public function dropdown($title, \Closure $callback, $order = null, array $attributes = array())
+    public function dropdown($title, \Closure $callback, $order = null, array $attributes = array()): MenuItem
     {
         $properties = compact('title', 'order', 'attributes');
 
@@ -375,9 +365,9 @@ class MenuBuilder implements Countable
      * @param array $parameters
      * @param array $attributes
      *
-     * @return static
+     * @return MenuItem
      */
-    public function route($route, $title, $parameters = array(), $order = null, $attributes = array())
+    public function route($route, $title, array $parameters = array(), $order = null, array $attributes = array()): MenuItem
     {
         if (func_num_args() == 4) {
             $arguments = func_get_args();
@@ -421,9 +411,9 @@ class MenuBuilder implements Countable
      * @param $title
      * @param array $attributes
      *
-     * @return static
+     * @return MenuItem
      */
-    public function url($url, $title, $order = 0, $attributes = array())
+    public function url($url, $title, $order = 0, array $attributes = array())
     {
         if (func_num_args() == 3) {
             $arguments = func_get_args();
@@ -448,9 +438,9 @@ class MenuBuilder implements Countable
      * Add new divider item.
      *
      * @param int $order
-     * @return \Nwidart\Menus\MenuItem
+     * @return MenuBuilder
      */
-    public function addDivider($order = null)
+    public function addDivider($order = null): MenuBuilder
     {
         $this->items[] = new MenuItem(array('name' => 'divider', 'order' => $order));
 
@@ -460,9 +450,9 @@ class MenuBuilder implements Countable
     /**
      * Add new header item.
      *
-     * @return \Nwidart\Menus\MenuItem
+     * @return MenuBuilder
      */
-    public function addHeader($title, $order = null)
+    public function addHeader($title, $order = null): MenuBuilder
     {
         $this->items[] = new MenuItem(array(
             'name' => 'header',
@@ -478,9 +468,9 @@ class MenuBuilder implements Countable
      *
      * @param string $title
      *
-     * @return $this
+     * @return MenuBuilder
      */
-    public function header($title)
+    public function header($title): MenuBuilder
     {
         return $this->addHeader($title);
     }
@@ -488,9 +478,9 @@ class MenuBuilder implements Countable
     /**
      * Alias for "addDivider" method.
      *
-     * @return $this
+     * @return MenuBuilder
      */
-    public function divider()
+    public function divider(): MenuBuilder
     {
         return $this->addDivider();
     }
@@ -500,7 +490,7 @@ class MenuBuilder implements Countable
      *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->items);
     }
@@ -508,7 +498,7 @@ class MenuBuilder implements Countable
     /**
      * Empty the current menu items.
      */
-    public function destroy()
+    public function destroy(): MenuBuilder
     {
         $this->items = array();
 
@@ -522,7 +512,7 @@ class MenuBuilder implements Countable
      *
      * @return string
      */
-    public function render($presenter = null)
+    public function render($presenter = null): string
     {
         $this->resolveItems($this->items);
 
@@ -546,7 +536,7 @@ class MenuBuilder implements Countable
      *
      * @return \Illuminate\View\View
      */
-    public function renderView($presenter = null)
+    public function renderView($presenter = null): \Illuminate\View\View
     {
         return $this->views->make($presenter ?: $this->view, [
             'items' => $this->getOrderedItems(),
@@ -558,7 +548,7 @@ class MenuBuilder implements Countable
      *
      * @return array
      */
-    public function getItems()
+    public function getItems(): array
     {
         return $this->items;
     }
@@ -568,7 +558,7 @@ class MenuBuilder implements Countable
      *
      * @return \Illuminate\Support\Collection
      */
-    public function toCollection()
+    public function toCollection(): \Illuminate\Support\Collection
     {
         return collect($this->items);
     }
@@ -578,7 +568,7 @@ class MenuBuilder implements Countable
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return $this->toCollection()->toArray();
     }
@@ -588,7 +578,7 @@ class MenuBuilder implements Countable
      *
      * @return self
      */
-    public function enableOrdering()
+    public function enableOrdering(): MenuBuilder
     {
         $this->ordering = true;
 
@@ -600,7 +590,7 @@ class MenuBuilder implements Countable
      *
      * @return self
      */
-    public function disableOrdering()
+    public function disableOrdering(): MenuBuilder
     {
         $this->ordering = false;
 
@@ -612,7 +602,7 @@ class MenuBuilder implements Countable
      *
      * @return array
      */
-    public function getOrderedItems()
+    public function getOrderedItems(): array
     {
         if (config('menus.ordering') || $this->ordering) {
             return $this->toCollection()->sortBy(function ($item) {
@@ -628,7 +618,7 @@ class MenuBuilder implements Countable
      *
      * @return string
      */
-    protected function renderMenu()
+    protected function renderMenu(): string
     {
         $presenter = $this->getPresenter();
         $menu = $presenter->getOpenTagWrapper();
